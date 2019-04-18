@@ -3,6 +3,7 @@
 char shape[4] = {'S','H','D','C'};
 char num[13] = { 'A','2','3','4','5','6','7','8','9','10','J','Q','K' };
 
+/*작은값 반환ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 int Min(int a, int b)
 {
 	if (a < b)
@@ -10,7 +11,7 @@ int Min(int a, int b)
 	else
 		return b;
 }
-
+/*덱 초기화ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 void Setting_Deck(CARD card[])
 {
 	int cnt = 0;
@@ -30,7 +31,8 @@ void Setting_Deck(CARD card[])
 	return;
 }
 
-void Init(SET* set_player, SET* set_dealer)
+/*셋 초기화ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+void Init_Set(SET* set_player, SET* set_dealer)
 {
 	set_player->head = (CARD*)malloc(sizeof(CARD));
 	set_player->tail = set_player->head;
@@ -43,6 +45,61 @@ void Init(SET* set_player, SET* set_dealer)
 	return;
 }
 
+/*점수 계산ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+int Calc_Score(SET* set)
+{
+	CARD* p = set->head;
+	int score=0;
+	int ace_cnt=0;
+
+	while(p != NULL)
+	{
+		score += Min(10,p->number);
+		if (p->number == 1)
+			ace_cnt++;
+
+		p = p->next;
+	}
+
+	for (int i = 0; i < ace_cnt; i++)
+	{
+		if (score + 10 <= 21)
+			score += 10;
+		else
+			break;
+	}
+
+	return score;
+}
+
+/*플레이어턴 딜러 점수 계산ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+int Calc_Score_Playerturn(SET* set)
+{
+	CARD* p = set->head->next;
+	int score = 0;
+	int ace_cnt = 0;
+
+	while (p != NULL)
+	{
+		score += Min(10, p->number);
+		if (p->number == 1)
+			ace_cnt++;
+
+		p = p->next;
+	}
+
+	for (int i = 0; i < ace_cnt; i++)
+	{
+		if (score + 10 <= 21)
+			score += 10;
+		else
+			break;
+	}
+
+	return score;
+}
+
+/*게임 화면 출력ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* set_dealer)
 {
 	system("cls");
@@ -50,26 +107,25 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 	printf("[소지금 : %d] [배팅금액 : %d]\n", *money, *money_bet);
 	printf("----------------------------------\n");
 
+	int score;
+
 	if (player_turn)
 		printf("<Dealer> [????] ");
 	else
 		printf("<Dealer> ");
 
-	int sum_dealer=0,sum_player=0;
-	int ace_dealer = 0, ace_player = 0;
-
 	CARD* p;
 
 	//Dealer score calc and print
-	p = set_dealer->head;
 
-	if (p->number == 1)
-		ace_dealer++;
+	CARD* tmp;
+
+	score = Calc_Score_Playerturn(set_dealer);
+
+	p = set_dealer->head;
 
 	if (!player_turn)
 	{
-		sum_dealer += Min(10, p->number);
-
 		char c[10];
 
 		switch (p->shape) {
@@ -87,6 +143,7 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 			break;
 		}
 
+		score = Calc_Score(set_dealer);
 		printf("[%s %c] ", c, num[p->number - 1]);
 	}
 
@@ -94,11 +151,6 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 
 	while(p!=NULL)
 	{
-		if (p->number == 1)
-			ace_dealer++;
-
-		sum_dealer += Min(10, p->number);
-
 		char c[10];
 
 		switch (p->shape) {
@@ -120,14 +172,7 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 		p = p->next;
 	}
 	
-	for (int i = 0; i < ace_dealer; i++)
-	{
-		if (sum_dealer - 1 + 11 <= 21)
-			sum_dealer += 10;
-		else
-			break;
-	}
-	printf(", Sum = %d\n", sum_dealer);
+	printf(", Sum = %d\n", score);
 
 
 	//Player score calc and print
@@ -136,11 +181,6 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 
 	while (p != NULL)
 	{
-		if (p->number == 1)
-			ace_player++;
-
-		sum_player += Min(10, p->number);
-
 		char c[10];
 		
 		switch (p->shape){
@@ -158,17 +198,25 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 				break;
 		}
 
-		printf("[%s %c] ", c, num[p->number - 1]);
+		printf("[%s %c] ", c, num[(p->number) - 1]);
 		p = p->next;
 
 	}
 
-	for (int i = 0; i < ace_player; i++)
+	printf(", Sum = %d\n\n", Calc_Score(set_player));
+}
+
+/*Set 버리기 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+void Destroy_Set(SET* set)
+{
+	CARD *p;
+
+	p = set->head;
+
+	while (p != NULL)
 	{
-		if (sum_player - 1 + 11 <= 21)
-			sum_player += 10;
-		else
-			break;
+		set->head = set->head->next;
+		free(p);
+		p = set->head;
 	}
-	printf(", Sum = %d\n\n", sum_player);
 }

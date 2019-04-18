@@ -1,5 +1,5 @@
 #include "assn5.h"
-
+/*�ѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤ�*/
 int Bet(int* money)
 {
 	while (1)
@@ -17,6 +17,7 @@ int Bet(int* money)
 	}
 }
 
+/*�ѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤ�*/
 void Shuffle_Deck(bool card_used[],int* card_use_cnt)
 {
 	if (*card_use_cnt >= 26)
@@ -31,6 +32,7 @@ void Shuffle_Deck(bool card_used[],int* card_use_cnt)
 	return;
 }
 
+/*�ѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤ�*/
 void Distri_First_Card(CARD card[],bool card_used[],int* card_use_cnt,SET* set_player,SET* set_dealer)
 {
 	int idx;
@@ -55,16 +57,17 @@ void Distri_First_Card(CARD card[],bool card_used[],int* card_use_cnt,SET* set_p
 		card_tmp->next = NULL;
 		if (i % 2)
 		{
-			set_dealer->head = card_tmp;
+			memcpy(set_dealer->head, card_tmp, sizeof(CARD));
 			set_dealer->tail = set_dealer->head;
 			(set_dealer->cnt)++;
 		}
 		else
 		{
-			set_player->head = card_tmp;
+			memcpy(set_player->head, card_tmp, sizeof(CARD));
 			set_player->tail = set_player->head;
 			(set_player->cnt)++;
 		}
+
 		free(card_tmp);
 	}
 
@@ -86,18 +89,19 @@ void Distri_First_Card(CARD card[],bool card_used[],int* card_use_cnt,SET* set_p
 
 		(*card_tmp) = card[idx];
 		card_tmp->next = NULL;
-		card_tmp->pre = NULL;
 		if (i % 2)
 		{
-			set_dealer->tail->next = card_tmp;
 			card_tmp->pre = set_dealer->tail;
+			set_dealer->tail->next = (CARD*)malloc(sizeof(CARD));
+			memcpy(set_dealer->tail->next, card_tmp, sizeof(CARD));
 			set_dealer->tail = set_dealer->tail->next;
 			(set_dealer->cnt)++;
 		}
 		else
 		{
-			set_player->tail->next = card_tmp;
 			card_tmp->pre = set_player->tail;
+			set_player->tail->next = (CARD*)malloc(sizeof(CARD));
+			memcpy(set_player->tail->next, card_tmp, sizeof(CARD));
 			set_player->tail = set_player->tail->next;
 			(set_player->cnt)++;
 		}
@@ -107,3 +111,5 @@ void Distri_First_Card(CARD card[],bool card_used[],int* card_use_cnt,SET* set_p
 
 	return;
 }
+
+/*�ѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤ�*/

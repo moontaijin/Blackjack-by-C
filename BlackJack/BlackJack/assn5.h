@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 typedef struct CARD{
 	int number;
@@ -26,3 +27,4 @@ void Distri_First_Card(CARD card[],bool card_used[], int* card_use_cnt,SET* set_
 //funcions.cpp func header
 int Min(int a, int b);
 void Init(SET* set_player, SET* set_dealer);
+void Print_Game(bool player_turn,int* money, int* money_bet, SET* set_player, SET* set_dealer);

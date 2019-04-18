@@ -3,15 +3,24 @@
 int money;
 int money_start;
 int money_bet;
+int card_use_cnt;
+bool card_used[52];
+CARD card[52];
+SET set_player, set_dealer;
 
 int main(int argc, char* argv[])
 {
+	srand(time(NULL));
+
 	if (argc == 1)
 		money = 5000;
 	else
 		money = atoi(argv[1]);
 
 	money_start = money;
+	Setting_Deck(card);
+
+	Init(&set_player,&set_dealer);
 
 	while (1)
 	{
@@ -33,6 +42,10 @@ int main(int argc, char* argv[])
 			printf("당신은 $%d을 들고가서 $%d를 남겨왔습니다.", money_start, money);
 			break;
 		}
+		money -= money_bet;
+
+		Shuffle_Deck(card_used, &card_use_cnt);
+		Distri_First_Card(card,card_used, &card_use_cnt,&set_player,&set_dealer);
 	}
 
 	return 0;

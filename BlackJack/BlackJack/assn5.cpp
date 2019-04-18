@@ -91,7 +91,10 @@ int main(int argc, char* argv[])
 			else if (!strcmp(order, "stay"))
 				break;
 			else
+			{
 				printf("유효한 명령어를 입력해주세요.\n");
+				getchar();
+			}
 		}
 
 		getchar();
@@ -117,11 +120,10 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		printf("\n----------------------------------\n");
-		game_end = true;
-
 		if (result != 1)
 		{
+			printf("\n----------------------------------\n");
+			game_end = true;
 			result = Chk_Game(&set_player, &set_dealer, game_end);
 			Print_Game_Result(result, &money, &money_bet);
 		}

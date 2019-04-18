@@ -160,7 +160,6 @@ int Chk_Game(SET* set_player,SET* set_dealer,bool game_end)
 		return 2;
 	else if (score_dealer == 21 && set_dealer->cnt == 2 && game_end)
 	{
-		printf("----------------------------------\n");
 		printf("µô·¯°¡ ¡ÚB¡ÚL¡ÚA¡ÚC¡ÚK¡ÚJ¡ÚA¡ÚC¡ÚK¡Ú\n");
 		return 3;
 	}

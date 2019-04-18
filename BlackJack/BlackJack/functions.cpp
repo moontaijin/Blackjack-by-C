@@ -1,7 +1,7 @@
 #include "assn5.h"
 
 char shape[4] = {'S','H','D','C'};
-char num[13] = { 'A','2','3','4','5','6','7','8','9','10','J','Q','K' };
+char num[13] = { 'A','2','3','4','5','6','7','8','9','T','J','Q','K' };
 
 /*작은값 반환ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 int Min(int a, int b)
@@ -118,8 +118,6 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 
 	//Dealer score calc and print
 
-	CARD* tmp;
-
 	score = Calc_Score_Playerturn(set_dealer);
 
 	p = set_dealer->head;
@@ -143,8 +141,12 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 			break;
 		}
 
+		if (p->number == 10)
+			printf("[%s 10] ",c);
+		else
+			printf("[%s %c] ", c, num[p->number - 1]);
+
 		score = Calc_Score(set_dealer);
-		printf("[%s %c] ", c, num[p->number - 1]);
 	}
 
 	p = p->next;
@@ -152,7 +154,6 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 	while(p!=NULL)
 	{
 		char c[10];
-
 		switch (p->shape) {
 		case 'S':
 			strcpy(c, "♠");
@@ -168,7 +169,11 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 			break;
 		}
 
-		printf("[%s %c] ", c, num[p->number - 1]);
+		if (p->number == 10)
+			printf("[%s 10] ", c);
+		else
+			printf("[%s %c] ", c, num[p->number - 1]);
+
 		p = p->next;
 	}
 	
@@ -198,7 +203,11 @@ void Print_Game(bool player_turn,int* money,int* money_bet,SET* set_player,SET* 
 				break;
 		}
 
-		printf("[%s %c] ", c, num[(p->number) - 1]);
+		if (p->number == 10)
+			printf("[%s 10] ", c);
+		else
+			printf("[%s %c] ", c, num[p->number - 1]);
+
 		p = p->next;
 
 	}
